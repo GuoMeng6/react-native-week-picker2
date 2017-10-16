@@ -10,7 +10,6 @@ import {
 
 import UI from 'UI';
 
-console.log('ui = ', UI);
 class GridLayout extends Component {
   constructor(props) {
     super(props);
@@ -19,7 +18,7 @@ class GridLayout extends Component {
     });
     const data = [];
     const { timeLength, dayLength } = props.data;
-    for (let i = 0; i < timeLength * dayLength; i++) {
+    for (let i = 0; i < timeLength * dayLength * 2; i++) {
       data.push({ index: i });
     }
     console.log('data = ', data);
@@ -27,7 +26,16 @@ class GridLayout extends Component {
       dataSource: ds.cloneWithRows(data),
     };
     this._renderRow = this._renderRow.bind(this);
+    this.onScroll = this.onScroll.bind(this);
   }
+
+  onScroll() {
+    this.props.onScroll(this.listView.scrollProperties.offset);
+  }
+
+  // onScroll2(y) {
+  //   this.listView.scrollTo({ x: 0, y, animated: true });
+  // }
 
   _renderRow(rowData = {}, sectionID, rowID) {
     return (
@@ -39,7 +47,15 @@ class GridLayout extends Component {
           }}
         >
           <View style={styles.rowView}>
-            <View style={{ flex: 1 }} />
+            <View
+              style={{
+                flex: 1,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}
+            >
+              <Text>{rowID}</Text>
+            </View>
             <View style={styles.lineView} />
           </View>
           <View style={styles.line2View} />
@@ -52,11 +68,16 @@ class GridLayout extends Component {
     return (
       <View style={styles.container}>
         <ListView
+          ref={o => {
+            this.listView = o;
+          }}
           dataSource={this.state.dataSource}
           contentContainerStyle={styles.listStyle}
           showsVerticalScrollIndicator={false}
           removeClippedSubviews={false}
-          initialListSize={63}
+          iosalwaysBounceHorizontal={false}
+          initialListSize={63 * 2}
+          onScroll={this.onScroll}
           renderRow={this._renderRow}
         />
       </View>
