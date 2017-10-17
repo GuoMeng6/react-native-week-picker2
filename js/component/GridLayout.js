@@ -11,6 +11,13 @@ import {
 import UI from 'UI';
 import ClickViewItem from './ClickViewItem';
 
+const defaultState = {
+  row: '',
+  vertical: '',
+  top: 0,
+  left: 0,
+  height: 0,
+};
 class GridLayout extends Component {
   constructor(props) {
     super(props);
@@ -29,13 +36,20 @@ class GridLayout extends Component {
       vertical: '',
       top: 0,
       left: 0,
+      height: 0,
     };
     this._renderRow = this._renderRow.bind(this);
     this.onScroll = this.onScroll.bind(this);
+    this.clearData = this.clearData.bind(this);
   }
 
   onScroll() {
     this.props.onScroll(this.listView.scrollProperties.offset);
+  }
+
+  clearData() {
+    console.log('======== clearData =========');
+    this.setState(defaultState);
   }
 
   // onScroll2(y) {
@@ -49,18 +63,47 @@ class GridLayout extends Component {
         onPress={() => {
           const index = parseInt(rowID);
           const { dayLength } = this.props.data;
-          console.log('============= 坐标 = ', {
-            row: parseInt(index / dayLength),
-            vertical: index % dayLength,
-          });
-          const row = parseInt(index / this.props.data.dayLength);
-          const vertical = index % this.props.data.dayLength;
+
+          const row = parseInt(index / dayLength);
+          const vertical = index % dayLength;
+          console.log(
+            '============= 坐标 = ',
+            {
+              row,
+              vertical,
+            },
+            '   state = ',
+            this.state,
+          );
+          if (
+            this.state.vertical !== vertical ||
+            this.state.height > UI.size.number60
+          ) {
+            this.setState({
+              row,
+              vertical,
+              top: row * UI.size.number60,
+              left:
+                vertical *
+                (UI.size.deviceWidth - UI.size.number120) /
+                dayLength,
+              height: UI.size.number60,
+            });
+            return;
+          }
+          // 在同一轴上
+          // if (this.state.height > UI.size.number60) {
+          //   // 取消当前选中项
+          //   this.setState(defaultState);
+          //   return;
+          // }
           this.setState({
-            row,
+            row: Math.min(this.state.row, row),
             vertical,
-            top: row * UI.size.number60,
+            top: Math.min(this.state.row, row) * UI.size.number60,
             left:
               vertical * (UI.size.deviceWidth - UI.size.number120) / dayLength,
+            height: UI.size.number60 * (Math.abs(this.state.row - row) + 1),
           });
         }}
       >
@@ -101,7 +144,12 @@ class GridLayout extends Component {
         />
         {typeof this.state.row === 'number' ? (
           <ClickViewItem
-            style={{ left: this.state.left + 2, top: this.state.top + 2 }}
+            style={{
+              left: this.state.left + 2,
+              top: this.state.top + 2,
+              height: this.state.height - 4,
+            }}
+            clearData={this.clearData}
           />
         ) : null}
       </View>
@@ -114,8 +162,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    marginLeft: UI.size.number100,
-    marginTop: UI.size.number60,
   },
   listStyle: {
     flexDirection: 'row', // 改变ListView的主轴方向

@@ -1,14 +1,20 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 
 import UI from 'UI';
 
 class ClickViewItem extends Component {
   render() {
     return (
-      <View style={[styles.container, this.props.style]}>
-        <Text style={{ fontSize: 10 }}>9:00-10:00</Text>
-      </View>
+      <TouchableOpacity
+        style={[styles.container, this.props.style]}
+        activeOpacity={1}
+        onPress={this.props.clearData}
+      >
+        <View style={{ flex: 1 }}>
+          <Text style={{ fontSize: 10 }}>9:00-10:00</Text>
+        </View>
+      </TouchableOpacity>
     );
   }
 }

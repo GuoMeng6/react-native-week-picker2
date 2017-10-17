@@ -4,6 +4,7 @@ import { View, StyleSheet } from 'react-native';
 import GridLayout from './component/GridLayout.js';
 import TitleView from './component/TitleView';
 import HeadView from './component/HeadView';
+import ScrollLayout from './component/ScrollLayout';
 
 class ReactPicker extends Component {
   constructor(props) {
@@ -23,19 +24,7 @@ class ReactPicker extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <GridLayout
-          ref={o => {
-            this.gridLayout = o;
-          }}
-          data={{ timeLength: 9, dayLength: 7 }}
-          onScroll={this.onScroll}
-        />
-        <TitleView
-          ref={o => {
-            this.titleView = o;
-          }}
-          // onScroll2={this.onScroll2}
-        />
+        <ScrollLayout />
         <HeadView />
       </View>
     );
