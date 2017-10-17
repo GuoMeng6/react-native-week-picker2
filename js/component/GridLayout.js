@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 
 import UI from 'UI';
+import ClickViewItem from './ClickViewItem';
 
 class GridLayout extends Component {
   constructor(props) {
@@ -24,6 +25,10 @@ class GridLayout extends Component {
     console.log('data = ', data);
     this.state = {
       dataSource: ds.cloneWithRows(data),
+      row: '',
+      vertical: '',
+      top: 0,
+      left: 0,
     };
     this._renderRow = this._renderRow.bind(this);
     this.onScroll = this.onScroll.bind(this);
@@ -39,7 +44,26 @@ class GridLayout extends Component {
 
   _renderRow(rowData = {}, sectionID, rowID) {
     return (
-      <TouchableOpacity opacity={1}>
+      <TouchableOpacity
+        activeOpacity={1}
+        onPress={() => {
+          const index = parseInt(rowID);
+          const { dayLength } = this.props.data;
+          console.log('============= 坐标 = ', {
+            row: parseInt(index / dayLength),
+            vertical: index % dayLength,
+          });
+          const row = parseInt(index / this.props.data.dayLength);
+          const vertical = index % this.props.data.dayLength;
+          this.setState({
+            row,
+            vertical,
+            top: row * UI.size.number60,
+            left:
+              vertical * (UI.size.deviceWidth - UI.size.number120) / dayLength,
+          });
+        }}
+      >
         <View
           style={{
             height: UI.size.number60,
@@ -47,13 +71,7 @@ class GridLayout extends Component {
           }}
         >
           <View style={styles.rowView}>
-            <View
-              style={{
-                flex: 1,
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}
-            >
+            <View style={styles.textView}>
               <Text>{rowID}</Text>
             </View>
             <View style={styles.lineView} />
@@ -75,11 +93,17 @@ class GridLayout extends Component {
           contentContainerStyle={styles.listStyle}
           showsVerticalScrollIndicator={false}
           removeClippedSubviews={false}
+          scrollEventThrottle={100}
           iosalwaysBounceHorizontal={false}
           initialListSize={63 * 2}
           onScroll={this.onScroll}
           renderRow={this._renderRow}
         />
+        {typeof this.state.row === 'number' ? (
+          <ClickViewItem
+            style={{ left: this.state.left + 2, top: this.state.top + 2 }}
+          />
+        ) : null}
       </View>
     );
   }
@@ -100,6 +124,11 @@ const styles = StyleSheet.create({
   rowView: {
     flex: 1,
     flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  textView: {
+    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
   },

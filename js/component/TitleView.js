@@ -39,39 +39,38 @@ class TitleView extends Component {
         // onScroll={this.onScroll2}
         scrollEventThrottle={200}
         style={styles.scrollView}
+        scrollEnabled={false}
+        showsVerticalScrollIndicator={false}
       >
         <View style={styles.container}>
-          {time.map((data, index) => {
-            console.log('data = ', data);
-            return (
+          {time.map((data, index) => (
+            <View
+              key={data + index}
+              style={{
+                height: UI.size.number120,
+                width: UI.size.number100,
+              }}
+            >
               <View
-                key={data + index}
                 style={{
-                  height: UI.size.number120,
-                  width: UI.size.number100,
+                  flex: 1,
+                  flexDirection: 'row',
                 }}
               >
                 <View
                   style={{
                     flex: 1,
-                    flexDirection: 'row',
+                    justifyContent: 'center',
+                    alignItems: 'center',
                   }}
                 >
-                  <View
-                    style={{
-                      flex: 1,
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                    }}
-                  >
-                    <Text style={{ fontSize: 12 }}>{data}</Text>
-                  </View>
-                  <View style={{ width: 1, backgroundColor: '#000000' }} />
+                  <Text style={{ fontSize: 12 }}>{data}</Text>
                 </View>
-                <View style={{ height: 1, backgroundColor: '#000000' }} />
+                <View style={{ width: 1, backgroundColor: '#000000' }} />
               </View>
-            );
-          })}
+              <View style={{ height: 1, backgroundColor: '#000000' }} />
+            </View>
+          ))}
         </View>
       </ScrollView>
     );

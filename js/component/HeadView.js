@@ -9,37 +9,34 @@ class HeadView extends Component {
   render() {
     return (
       <View style={styles.container}>
-        {day.map((data, index) => {
-          console.log('data = ', data);
-          return (
+        {day.map((data, index) => (
+          <View
+            key={data + index}
+            style={{
+              height: UI.size.number60,
+              width: (UI.size.deviceWidth - UI.size.number120) / 7,
+            }}
+          >
             <View
-              key={data + index}
               style={{
-                height: UI.size.number60,
-                width: (UI.size.deviceWidth - UI.size.number120) / 7,
+                flex: 1,
+                flexDirection: 'row',
               }}
             >
               <View
                 style={{
                   flex: 1,
-                  flexDirection: 'row',
+                  justifyContent: 'center',
+                  alignItems: 'center',
                 }}
               >
-                <View
-                  style={{
-                    flex: 1,
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                  }}
-                >
-                  <Text style={{ fontSize: 12 }}>{data}</Text>
-                </View>
-                <View style={{ width: 1, backgroundColor: '#000000' }} />
+                <Text style={{ fontSize: 12 }}>{data}</Text>
               </View>
-              <View style={{ height: 1, backgroundColor: '#000000' }} />
+              <View style={{ width: 1, backgroundColor: '#000000' }} />
             </View>
-          );
-        })}
+            <View style={{ height: 1, backgroundColor: '#000000' }} />
+          </View>
+        ))}
       </View>
     );
   }
