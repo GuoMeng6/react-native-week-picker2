@@ -16,44 +16,17 @@ const time = [
 ];
 
 class TitleView extends Component {
-  constructor(props) {
-    super(props);
-    // this.onScroll2 = this.onScroll2.bind(this);
-  }
-
   onScroll(y) {
     this.scrollView.scrollTo({ x: 0, y, animated: true });
   }
-
-  // onScroll2(event) {
-  //   console.log('======= onScroll ====== ', event.nativeEvent.contentOffset.y);
-  //   this.props.onScroll2(event.nativeEvent.contentOffset.y, 'title');
-  // }
 
   render() {
     return (
       <View style={styles.container}>
         {time.map((data, index) => (
-          <View
-            key={data + index}
-            style={{
-              height: UI.size.number120,
-              width: UI.size.number100,
-            }}
-          >
-            <View
-              style={{
-                flex: 1,
-                flexDirection: 'row',
-              }}
-            >
-              <View
-                style={{
-                  flex: 1,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}
-              >
+          <View key={data + index} style={styles.itemView}>
+            <View style={styles.rowView}>
+              <View style={styles.centerView}>
                 <Text style={{ fontSize: 12 }}>{data}</Text>
               </View>
               <View style={{ width: 1, backgroundColor: '#000000' }} />
@@ -70,6 +43,19 @@ const styles = StyleSheet.create({
   container: {
     width: UI.size.number100,
     height: UI.size.number60 * 18,
+  },
+  itemView: {
+    height: UI.size.number120,
+    width: UI.size.number100,
+  },
+  rowView: {
+    flex: 1,
+    flexDirection: 'row',
+  },
+  centerView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 

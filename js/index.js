@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { View, StyleSheet } from 'react-native';
 
+import moment from 'moment';
+
 import GridLayout from './component/GridLayout.js';
 import TitleView from './component/TitleView';
 import HeadView from './component/HeadView';
@@ -24,8 +26,8 @@ class ReactPicker extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <ScrollLayout />
-        <HeadView />
+        <ScrollLayout timeStatus={this.props.timeStatus} />
+        <HeadView weekMoment={this.props.timeStatus.weekMoment} />
       </View>
     );
   }
@@ -34,7 +36,8 @@ class ReactPicker extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F5FCFF',
+    backgroundColor: '#ffffff',
+    marginTop: 20,
   },
 });
 

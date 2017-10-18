@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 
 import UI from 'UI';
+import moment from 'moment';
 import ClickViewItem from './ClickViewItem';
 
 const defaultState = {
@@ -17,6 +18,8 @@ const defaultState = {
   top: 0,
   left: 0,
   height: 0,
+  startTime: 0,
+  endTime: 0,
 };
 class GridLayout extends Component {
   constructor(props) {
@@ -31,21 +34,16 @@ class GridLayout extends Component {
     }
     console.log('data = ', data);
     this.state = {
+      ...defaultState,
       dataSource: ds.cloneWithRows(data),
-      row: '',
-      vertical: '',
-      top: 0,
-      left: 0,
-      height: 0,
     };
+    console.log('============ this.state  = ', this.state);
     this._renderRow = this._renderRow.bind(this);
     this.onScroll = this.onScroll.bind(this);
     this.clearData = this.clearData.bind(this);
   }
 
-  onScroll() {
-    this.props.onScroll(this.listView.scrollProperties.offset);
-  }
+  onScroll() {}
 
   clearData() {
     console.log('======== clearData =========');
@@ -63,18 +61,18 @@ class GridLayout extends Component {
         onPress={() => {
           const index = parseInt(rowID);
           const { dayLength } = this.props.data;
-
           const row = parseInt(index / dayLength);
           const vertical = index % dayLength;
-          console.log(
-            '============= 坐标 = ',
-            {
-              row,
-              vertical,
-            },
-            '   state = ',
-            this.state,
-          );
+          console.log('============= 坐标 = ', {
+            row,
+            vertical,
+          });
+          const currentDay9amUnix = moment
+            .unix(this.props.weekMoment.unix())
+            .add(vertical, 'day')
+            .add(9, 'hour')
+            .unix();
+          console.log('========= currentDay9amUnix = ', currentDay9amUnix);
           if (
             this.state.vertical !== vertical ||
             this.state.height > UI.size.number60
@@ -88,6 +86,8 @@ class GridLayout extends Component {
                 (UI.size.deviceWidth - UI.size.number120) /
                 dayLength,
               height: UI.size.number60,
+              startTime: currentDay9amUnix + row * 1800,
+              endTime: currentDay9amUnix + (row + 1) * 1800,
             });
             return;
           }
@@ -97,13 +97,24 @@ class GridLayout extends Component {
           //   this.setState(defaultState);
           //   return;
           // }
+
+          const rowMin = Math.min(this.state.row, row);
+          const halfHourCount = Math.abs(this.state.row - row) + 1;
+          console.log('========== 同一轴上 ======= ', {
+            rowMin,
+            halfHourCount,
+            startTime: currentDay9amUnix + rowMin * 1800,
+            endTime: currentDay9amUnix + rowMin * 1800 + halfHourCount * 1800,
+          });
           this.setState({
-            row: Math.min(this.state.row, row),
+            row: rowMin,
             vertical,
-            top: Math.min(this.state.row, row) * UI.size.number60,
+            top: rowMin * UI.size.number60,
             left:
               vertical * (UI.size.deviceWidth - UI.size.number120) / dayLength,
-            height: UI.size.number60 * (Math.abs(this.state.row - row) + 1),
+            height: UI.size.number60 * halfHourCount,
+            startTime: currentDay9amUnix + rowMin * 1800,
+            endTime: currentDay9amUnix + rowMin * 1800 + halfHourCount * 1800,
           });
         }}
       >
@@ -126,6 +137,7 @@ class GridLayout extends Component {
   }
 
   render() {
+    console.log('========= [render] ======== ', this.state);
     return (
       <View style={styles.container}>
         <ListView
@@ -136,7 +148,6 @@ class GridLayout extends Component {
           contentContainerStyle={styles.listStyle}
           showsVerticalScrollIndicator={false}
           removeClippedSubviews={false}
-          scrollEventThrottle={100}
           iosalwaysBounceHorizontal={false}
           initialListSize={63 * 2}
           onScroll={this.onScroll}
@@ -150,6 +161,8 @@ class GridLayout extends Component {
               height: this.state.height - 4,
             }}
             clearData={this.clearData}
+            startTime={this.state.startTime}
+            endTime={this.state.endTime}
           />
         ) : null}
       </View>

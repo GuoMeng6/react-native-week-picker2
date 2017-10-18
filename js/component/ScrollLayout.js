@@ -11,7 +11,16 @@ class ScrollLayout extends Component {
       <ScrollView style={styles.container}>
         <View style={styles.scrollView}>
           <TitleView />
-          <GridLayout data={{ timeLength: 9, dayLength: 7 }} />
+          <GridLayout
+            data={{
+              timeLength:
+                this.props.timeStatus.endTime -
+                this.props.timeStatus.startTime +
+                1,
+              dayLength: 7,
+            }}
+            weekMoment={this.props.timeStatus.weekMoment}
+          />
         </View>
       </ScrollView>
     );
@@ -23,7 +32,7 @@ const styles = StyleSheet.create({
     flex: 1,
     marginTop: UI.size.number60,
     width: UI.size.deviceWidth,
-    height: UI.size.deviceHeight - UI.size.number60,
+    height: UI.size.deviceHeight - UI.size.number60 - 20,
   },
   scrollView: {
     width: UI.size.deviceWidth,

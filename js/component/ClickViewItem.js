@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 
 import UI from 'UI';
+import moment from 'moment';
 
 class ClickViewItem extends Component {
   render() {
@@ -12,7 +13,13 @@ class ClickViewItem extends Component {
         onPress={this.props.clearData}
       >
         <View style={{ flex: 1 }}>
-          <Text style={{ fontSize: 10 }}>9:00-10:00</Text>
+          <Text style={{ fontSize: 12 }}>
+            {`${moment
+              .unix(this.props.startTime)
+              .format('HH:mm')}-${moment
+              .unix(this.props.endTime)
+              .format('HH:mm')}`}
+          </Text>
         </View>
       </TouchableOpacity>
     );
