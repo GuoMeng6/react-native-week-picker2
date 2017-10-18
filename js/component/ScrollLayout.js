@@ -21,7 +21,14 @@ class ScrollLayout extends Component {
             { height: UI.size.rowHeight * timeStamp * 2 },
           ]}
         >
-          <TitleView timeStatus={this.props.timeStatus} />
+          <TitleView
+            timeStatus={this.props.timeStatus}
+            timeLength={
+              this.props.timeStatus.endTime -
+              this.props.timeStatus.startTime +
+              1
+            }
+          />
           <GridLayout
             data={{
               timeLength:
