@@ -10,7 +10,11 @@ class ScrollLayout extends Component {
     const timeStamp =
       this.props.timeStatus.endTime - this.props.timeStatus.startTime + 1;
     return (
-      <ScrollView style={styles.container}>
+      <ScrollView
+        style={styles.container}
+        bounces={false}
+        showsVerticalScrollIndicator={false}
+      >
         <View
           style={[
             styles.scrollView,
