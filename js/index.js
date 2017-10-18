@@ -8,6 +8,12 @@ import TitleView from './component/TitleView';
 import HeadView from './component/HeadView';
 import ScrollLayout from './component/ScrollLayout';
 
+const defaultData = {
+  startTime: 8,
+  endTime: 21,
+  weekMoment: moment().startOf('week'),
+};
+
 class ReactPicker extends Component {
   constructor(props) {
     super(props);
@@ -19,10 +25,15 @@ class ReactPicker extends Component {
   }
 
   render() {
+    const propsStatus = this.props.timeStatus;
     return (
       <View style={styles.container}>
-        <ScrollLayout timeStatus={this.props.timeStatus} />
-        <HeadView weekMoment={this.props.timeStatus.weekMoment} />
+        <ScrollLayout timeStatus={{ ...defaultData, ...propsStatus }} />
+        <HeadView
+          weekMoment={
+            (propsStatus && propsStatus.weekMoment) || defaultData.weekMoment
+          }
+        />
       </View>
     );
   }
