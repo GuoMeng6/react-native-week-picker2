@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
   container: {
     position: 'absolute',
     backgroundColor: '#00ffff',
-    height: UI.size.number60 - 4,
+    height: UI.size.rowHeight - 4,
     width: (UI.size.deviceWidth - UI.size.number120) / 7 - 4,
     borderRadius: 4,
   },

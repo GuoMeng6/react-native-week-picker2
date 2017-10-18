@@ -75,24 +75,24 @@ class GridLayout extends Component {
             .unix();
           if (
             this.state.vertical !== vertical ||
-            this.state.height > UI.size.number60
+            this.state.height > UI.size.rowHeight
           ) {
             this.setState({
               row,
               vertical,
-              top: row * UI.size.number60,
+              top: row * UI.size.rowHeight,
               left:
                 vertical *
                 (UI.size.deviceWidth - UI.size.number120) /
                 dayLength,
-              height: UI.size.number60,
+              height: UI.size.rowHeight,
               startTime: currentDay9amUnix + row * 1800,
               endTime: currentDay9amUnix + (row + 1) * 1800,
             });
             return;
           }
           // 在同一轴上
-          // if (this.state.height > UI.size.number60) {
+          // if (this.state.height > UI.size.rowHeight) {
           //   // 取消当前选中项
           //   this.setState(defaultState);
           //   return;
@@ -109,10 +109,10 @@ class GridLayout extends Component {
           this.setState({
             row: rowMin,
             vertical,
-            top: rowMin * UI.size.number60,
+            top: rowMin * UI.size.rowHeight,
             left:
               vertical * (UI.size.deviceWidth - UI.size.number120) / dayLength,
-            height: UI.size.number60 * halfHourCount,
+            height: UI.size.rowHeight * halfHourCount,
             startTime: currentDay9amUnix + rowMin * 1800,
             endTime: currentDay9amUnix + rowMin * 1800 + halfHourCount * 1800,
           });
@@ -120,7 +120,7 @@ class GridLayout extends Component {
       >
         <View
           style={{
-            height: UI.size.number60,
+            height: UI.size.rowHeight,
             width: (UI.size.deviceWidth - UI.size.number120) / 7,
           }}
         >
@@ -194,7 +194,7 @@ const styles = StyleSheet.create({
   },
   lineView: {
     width: 1,
-    height: UI.size.number60,
+    height: UI.size.rowHeight,
     backgroundColor: '#000000',
   },
   line2View: {

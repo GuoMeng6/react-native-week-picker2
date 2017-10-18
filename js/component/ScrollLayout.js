@@ -18,7 +18,7 @@ class ScrollLayout extends Component {
         <View
           style={[
             styles.scrollView,
-            { height: UI.size.number60 * timeStamp * 2 },
+            { height: UI.size.rowHeight * timeStamp * 2 },
           ]}
         >
           <TitleView timeStatus={this.props.timeStatus} />
@@ -42,9 +42,9 @@ class ScrollLayout extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop: UI.size.number60,
+    marginTop: UI.size.rowHeight,
     width: UI.size.deviceWidth,
-    height: UI.size.deviceHeight - UI.size.number60 - 20,
+    height: UI.size.deviceHeight - UI.size.rowHeight - 20,
   },
   scrollView: {
     width: UI.size.deviceWidth,

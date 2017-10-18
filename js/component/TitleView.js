@@ -51,7 +51,7 @@ class TitleView extends Component {
 const styles = StyleSheet.create({
   container: {
     width: UI.size.number100,
-    height: UI.size.number60 * 18,
+    height: UI.size.rowHeight * 18,
   },
   itemView: {
     height: UI.size.number120,

@@ -15,7 +15,7 @@ class HeadView extends Component {
           <View
             key={data + index}
             style={{
-              height: UI.size.number60,
+              height: UI.size.rowHeight,
               width: (UI.size.deviceWidth - UI.size.number120) / 7,
             }}
           >
@@ -56,7 +56,7 @@ const styles = StyleSheet.create({
     top: 0,
     left: UI.size.number100,
     width: UI.size.deviceWidth - UI.size.number120,
-    height: UI.size.number60,
+    height: UI.size.rowHeight,
   },
 });
 
