@@ -7,10 +7,17 @@ import GridLayout from './GridLayout';
 
 class ScrollLayout extends Component {
   render() {
+    const timeStamp =
+      this.props.timeStatus.endTime - this.props.timeStatus.startTime + 1;
     return (
       <ScrollView style={styles.container}>
-        <View style={styles.scrollView}>
-          <TitleView />
+        <View
+          style={[
+            styles.scrollView,
+            { height: UI.size.number60 * timeStamp * 2 },
+          ]}
+        >
+          <TitleView timeStatus={this.props.timeStatus} />
           <GridLayout
             data={{
               timeLength:
@@ -19,6 +26,7 @@ class ScrollLayout extends Component {
                 1,
               dayLength: 7,
             }}
+            timeStatus={this.props.timeStatus}
             weekMoment={this.props.timeStatus.weekMoment}
           />
         </View>
@@ -36,7 +44,6 @@ const styles = StyleSheet.create({
   },
   scrollView: {
     width: UI.size.deviceWidth,
-    height: UI.size.number60 * 18,
     flexDirection: 'row',
   },
 });

@@ -2,20 +2,29 @@ import React, { Component } from 'react';
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
 
 import UI from 'UI';
+import moment from 'moment';
+import esLocal from 'moment/locale/es-us';
 
-const time = [
-  '9AM',
-  '10AM',
-  '11AM',
-  '12AM',
-  '13AM',
-  '14AM',
-  '15AM',
-  '16AM',
-  '17AM',
-];
+const time = [];
 
 class TitleView extends Component {
+  constructor(props) {
+    super(props);
+    for (
+      let i = props.timeStatus.startTime;
+      i <= props.timeStatus.endTime;
+      i++
+    ) {
+      time.push(
+        moment
+          .unix(props.timeStatus.weekMoment)
+          .locale('en-us', esLocal)
+          .add(i, 'hour')
+          .format('hA'),
+      );
+    }
+  }
+
   onScroll(y) {
     this.scrollView.scrollTo({ x: 0, y, animated: true });
   }

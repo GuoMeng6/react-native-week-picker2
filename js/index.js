@@ -12,16 +12,11 @@ class ReactPicker extends Component {
   constructor(props) {
     super(props);
     this.onScroll = this.onScroll.bind(this);
-    // this.onScroll2 = this.onScroll2.bind(this);
   }
 
   onScroll(data) {
     this.titleView && this.titleView.onScroll(data);
   }
-
-  // onScroll2(data) {
-  //   this.gridLayout && this.gridLayout.onScroll2(data);
-  // }
 
   render() {
     return (

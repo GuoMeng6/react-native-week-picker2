@@ -21,6 +21,7 @@ const defaultState = {
   startTime: 0,
   endTime: 0,
 };
+
 class GridLayout extends Component {
   constructor(props) {
     super(props);
@@ -70,9 +71,8 @@ class GridLayout extends Component {
           const currentDay9amUnix = moment
             .unix(this.props.weekMoment.unix())
             .add(vertical, 'day')
-            .add(9, 'hour')
+            .add(this.props.timeStatus.startTime, 'hour')
             .unix();
-          console.log('========= currentDay9amUnix = ', currentDay9amUnix);
           if (
             this.state.vertical !== vertical ||
             this.state.height > UI.size.number60
@@ -138,6 +138,7 @@ class GridLayout extends Component {
 
   render() {
     console.log('========= [render] ======== ', this.state);
+    const { timeLength, dayLength } = this.props.data;
     return (
       <View style={styles.container}>
         <ListView
@@ -149,7 +150,7 @@ class GridLayout extends Component {
           showsVerticalScrollIndicator={false}
           removeClippedSubviews={false}
           iosalwaysBounceHorizontal={false}
-          initialListSize={63 * 2}
+          initialListSize={timeLength * dayLength * 2}
           onScroll={this.onScroll}
           renderRow={this._renderRow}
         />
