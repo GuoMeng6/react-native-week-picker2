@@ -23,19 +23,17 @@ class GridLayout extends Component {
     for (let i = 0; i < timeLength * dayLength * 2; i++) {
       data.push({ index: i });
     }
-    console.log('data = ', data);
     this.state = {
       defaultState: [],
       type: 0,
       dataSource: ds.cloneWithRows(data),
+      selectedItem: {},
     };
-    console.log('============ this.state  = ', this.state);
     this._renderRow = this._renderRow.bind(this);
     this.clearData = this.clearData.bind(this);
   }
 
   clearData() {
-    console.log('======== clearData =========');
     this.setState({ defaultState: [] });
   }
 
@@ -48,7 +46,6 @@ class GridLayout extends Component {
     const flag = false; // 标记是否包含已选择的区块
     const range = rangeData;
     //* ******判断是否为第一次点击 */
-    console.log('------- filterClickData ----- ', { x, y, rangeData });
     if (!range) {
       return {
         start: {
@@ -74,8 +71,6 @@ class GridLayout extends Component {
       range.end.y = y + 1;
     }
 
-    console.log('-----222range2-----', range);
-
     return range;
   }
 
@@ -85,6 +80,7 @@ class GridLayout extends Component {
 
     const aEndX = aRange.end.x;
     const aEndY = aRange.end.y;
+
     for (let i = 0; i < bRanges.length; i++) {
       const bStartX = bRanges[i].start.x;
       const bStartY = bRanges[i].start.y;
@@ -125,17 +121,17 @@ class GridLayout extends Component {
 
           const mergeProps = this.filterData(result, this.props.rentData);
           if (!mergeProps) {
+            console.log('========= mergeProps ===========');
           }
           const mergeState = this.filterData(result, this.state.defaultState);
           if (!mergeState) {
+            // console.log('========= mergeState ===========');
           }
-          console.log('=========result=====', result);
-          this.props.onSelectedChanged(result);
+          const returnData = this.props.onSelectedChanged(result);
           this.setState({
             defaultState: [result],
+            selectedItem: returnData,
           });
-
-          console.log('=========result=====', result);
         }}
       >
         <View
@@ -157,7 +153,6 @@ class GridLayout extends Component {
   }
 
   render() {
-    console.log('========= [render] ======== ', this.state.defaultState);
     const { timeLength, dayLength } = this.props.data;
     return (
       <View style={styles.container}>
@@ -173,23 +168,21 @@ class GridLayout extends Component {
           initialListSize={timeLength * dayLength * 2}
           renderRow={this._renderRow}
         />
-        {typeof this.state.row === 'number' ? (
+        {this.state.defaultState.map((data, index) => (
           <ClickViewItem
+            key={`click2Item${index}`}
             style={{
-              left: this.state.left + 2,
-              top: this.state.top + 2,
-              height: this.state.height - 4,
+              left: data.start.x * UI.size.rowWidth + 2,
+              top: data.start.y * UI.size.rowHeight + 2,
+              height: (data.end.y - data.start.y) * UI.size.rowHeight - 4,
+              width: (data.end.x - data.start.x) * UI.size.rowWidth - 4,
             }}
+            disabled={false}
             clearData={this.clearData}
-            title={`${moment
-              .unix(this.props.startTime)
-              .format('HH:mm')}-${moment
-              .unix(this.props.endTime)
-              .format('HH:mm')}`}
-            startTime={this.state.startTime}
-            endTime={this.state.endTime}
+            title={this.state.selectedItem.title}
+            subTitle={this.state.selectedItem.subTitle}
           />
-        ) : null}
+        ))}
         {this.props.rentData.map((data, index) => (
           <ClickViewItem
             key={`clickItem${index}`}

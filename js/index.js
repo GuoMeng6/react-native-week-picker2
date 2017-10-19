@@ -26,15 +26,18 @@ class ReactPicker extends Component {
   }
 
   onSelectedChanged(data) {
-    console.log('========== onSelectedChanged ======== ', data);
     const todayStartUnix = moment()
       .startOf('week')
       .add(data.start.x + 1, 'day')
       .add(8, 'hour')
       .unix();
-    console.log('========== todayStartUnix = ', todayStartUnix);
     return {
-      title: 'q',
+      title: `${moment
+        .unix(todayStartUnix + data.start.y * 1800)
+        .format('hh:mm')}-${moment
+        .unix(todayStartUnix + data.end.y * 1800)
+        .format('hh:mm')}`,
+      subTitle: '会议',
     };
   }
 
@@ -52,7 +55,6 @@ class ReactPicker extends Component {
     fetch(url)
       .then(response => response.json())
       .then(res => {
-        console.log('======= res = ', res);
         if (res.status === 'success') {
           const filterData = res.data.map(data => {
             const subtractFromTime =
