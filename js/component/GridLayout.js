@@ -12,8 +12,6 @@ import UI from 'UI';
 import moment from 'moment';
 import ClickViewItem from './ClickViewItem';
 
-const defaultState = [];
-
 class GridLayout extends Component {
   constructor(props) {
     super(props);
@@ -27,7 +25,7 @@ class GridLayout extends Component {
     }
     console.log('data = ', data);
     this.state = {
-      defaultState,
+      defaultState: [],
       type: 0,
       dataSource: ds.cloneWithRows(data),
     };
@@ -38,7 +36,7 @@ class GridLayout extends Component {
 
   clearData() {
     console.log('======== clearData =========');
-    this.setState(defaultState);
+    this.setState({ defaultState: [] });
   }
 
   // onScroll2(y) {
@@ -50,11 +48,8 @@ class GridLayout extends Component {
     const flag = false; // 标记是否包含已选择的区块
     const range = rangeData;
     //* ******判断是否为第一次点击 */
-    console.log('-------range----', range);
-
+    console.log('------- filterClickData ----- ', { x, y, rangeData });
     if (!range) {
-      console.log('-----------');
-
       return {
         start: {
           x,
@@ -83,6 +78,7 @@ class GridLayout extends Component {
 
     return range;
   }
+
   filterData(aRange, bRanges) {
     const aStartX = aRange.start.x;
     const aStartY = aRange.start.y;
@@ -109,6 +105,7 @@ class GridLayout extends Component {
     }
     return true;
   }
+
   _renderRow(rowData = {}, sectionID, rowID) {
     return (
       <TouchableOpacity
@@ -125,33 +122,19 @@ class GridLayout extends Component {
 
           const range = this.state.defaultState[0];
           const result = this.filterClickData(x, y, range);
+
           const mergeProps = this.filterData(result, this.props.rentData);
           if (!mergeProps) {
-            return {
-              start: {
-                x,
-                y,
-              },
-              end: {
-                x: x + 1,
-                y: y + 1,
-              },
-            };
           }
           const mergeState = this.filterData(result, this.state.defaultState);
-
           if (!mergeState) {
-            return {
-              start: {
-                x,
-                y,
-              },
-              end: {
-                x: x + 1,
-                y: y + 1,
-              },
-            };
           }
+          console.log('=========result=====', result);
+          this.props.onSelectedChanged(result);
+          this.setState({
+            defaultState: [result],
+          });
+
           console.log('=========result=====', result);
         }}
       >
@@ -174,7 +157,7 @@ class GridLayout extends Component {
   }
 
   render() {
-    console.log('========= [render] ======== ', this.props.rentData);
+    console.log('========= [render] ======== ', this.state.defaultState);
     const { timeLength, dayLength } = this.props.data;
     return (
       <View style={styles.container}>
@@ -207,23 +190,20 @@ class GridLayout extends Component {
             endTime={this.state.endTime}
           />
         ) : null}
-        {this.props.rentData.map((data, index) => {
-          console.log('data = ', data);
-          return (
-            <ClickViewItem
-              key={`clickItem${index}`}
-              style={{
-                left: data.start.x * UI.size.rowWidth + 2,
-                top: data.start.y * UI.size.rowHeight + 2,
-                height: (data.end.y - data.start.y) * UI.size.rowHeight - 4,
-                backgroundColor: '#ffe66f',
-              }}
-              disabled
-              title={data.title}
-              subTitle={data.subTitle}
-            />
-          );
-        })}
+        {this.props.rentData.map((data, index) => (
+          <ClickViewItem
+            key={`clickItem${index}`}
+            style={{
+              left: data.start.x * UI.size.rowWidth + 2,
+              top: data.start.y * UI.size.rowHeight + 2,
+              height: (data.end.y - data.start.y) * UI.size.rowHeight - 4,
+              backgroundColor: '#ffe66f',
+            }}
+            disabled
+            title={data.title}
+            subTitle={data.subTitle}
+          />
+        ))}
       </View>
     );
   }

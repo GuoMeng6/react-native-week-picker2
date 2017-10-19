@@ -26,7 +26,16 @@ class ReactPicker extends Component {
   }
 
   onSelectedChanged(data) {
-    console.log('========== onChanged ======== ', data);
+    console.log('========== onSelectedChanged ======== ', data);
+    const todayStartUnix = moment()
+      .startOf('week')
+      .add(data.start.x + 1, 'day')
+      .add(8, 'hour')
+      .unix();
+    console.log('========== todayStartUnix = ', todayStartUnix);
+    return {
+      title: 'q',
+    };
   }
 
   componentWillMount() {
@@ -46,10 +55,6 @@ class ReactPicker extends Component {
         console.log('======= res = ', res);
         if (res.status === 'success') {
           const filterData = res.data.map(data => {
-            console.log(
-              '======== 小时 ======= ',
-              moment.unix(data.from).get('hour'),
-            );
             const subtractFromTime =
               data.from -
               moment
@@ -70,7 +75,7 @@ class ReactPicker extends Component {
                 y: subtractFromTime / 1800,
               },
               end: {
-                x: moment.unix(data.to).format('E') - 1,
+                x: moment.unix(data.to).format('E'),
                 y: subtractToTime / 1800,
               },
               title: `${moment.unix(data.from).format('HH:mm')}-${moment
