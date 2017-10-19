@@ -40,20 +40,13 @@ class GridLayout extends Component {
     };
     console.log('============ this.state  = ', this.state);
     this._renderRow = this._renderRow.bind(this);
-    this.onScroll = this.onScroll.bind(this);
     this.clearData = this.clearData.bind(this);
   }
-
-  onScroll() {}
 
   clearData() {
     console.log('======== clearData =========');
     this.setState(defaultState);
   }
-
-  // onScroll2(y) {
-  //   this.listView.scrollTo({ x: 0, y, animated: true });
-  // }
 
   _renderRow(rowData = {}, sectionID, rowID) {
     return (
@@ -89,6 +82,7 @@ class GridLayout extends Component {
               startTime: currentDay9amUnix + row * 1800,
               endTime: currentDay9amUnix + (row + 1) * 1800,
             });
+            this.props.onSelectedChanged({ selected: true });
             return;
           }
           // 在同一轴上
@@ -151,7 +145,6 @@ class GridLayout extends Component {
           removeClippedSubviews={false}
           iosalwaysBounceHorizontal={false}
           initialListSize={timeLength * dayLength * 2}
-          onScroll={this.onScroll}
           renderRow={this._renderRow}
         />
         {typeof this.state.row === 'number' ? (
@@ -171,10 +164,11 @@ class GridLayout extends Component {
             endTime={this.state.endTime}
           />
         ) : null}
-        {this.props.rentData.map(data => {
+        {this.props.rentData.map((data, index) => {
           console.log('data = ', data);
           return (
             <ClickViewItem
+              key={`clickItem${index}`}
               style={{
                 left: data.start.x * UI.size.rowWidth + 2,
                 top: data.start.y * UI.size.rowHeight + 2,

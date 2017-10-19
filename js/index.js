@@ -22,6 +22,11 @@ class ReactPicker extends Component {
     this.state = {
       rentData: [],
     };
+    this.onSelectedChanged = this.onSelectedChanged.bind(this);
+  }
+
+  onSelectedChanged(data) {
+    console.log('========== onChanged ======== ', data);
   }
 
   componentWillMount() {
@@ -71,7 +76,7 @@ class ReactPicker extends Component {
               title: `${moment.unix(data.from).format('HH:mm')}-${moment
                 .unix(data.to)
                 .format('HH:mm')}`,
-              subTitle: data.name,
+              subTitle: data.name || '会议',
               style: { backgroundColor: '#ffe66f' },
             };
           });
@@ -93,6 +98,7 @@ class ReactPicker extends Component {
         <ScrollLayout
           timeStatus={{ ...defaultData, ...propsStatus }}
           rentData={this.state.rentData}
+          onSelectedChanged={this.onSelectedChanged}
         />
         <HeadView
           weekMoment={

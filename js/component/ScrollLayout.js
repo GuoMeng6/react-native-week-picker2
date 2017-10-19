@@ -40,6 +40,7 @@ class ScrollLayout extends Component {
             timeStatus={this.props.timeStatus}
             weekMoment={this.props.timeStatus.weekMoment}
             rentData={this.props.rentData}
+            onSelectedChanged={this.props.onSelectedChanged}
           />
         </View>
       </ScrollView>
