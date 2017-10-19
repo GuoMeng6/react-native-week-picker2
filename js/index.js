@@ -77,7 +77,7 @@ class ReactPicker extends Component {
                 y: subtractFromTime / 1800,
               },
               end: {
-                x: moment.unix(data.to).format('E'),
+                x: parseInt(moment.unix(data.to).format('E')),
                 y: subtractToTime / 1800,
               },
               title: `${moment.unix(data.from).format('HH:mm')}-${moment
