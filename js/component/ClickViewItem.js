@@ -11,15 +11,10 @@ class ClickViewItem extends Component {
         style={[styles.container, this.props.style]}
         activeOpacity={1}
         onPress={this.props.clearData}
+        disabled={this.props.disabled}
       >
         <View style={{ flex: 1 }}>
-          <Text style={{ fontSize: 12 }}>
-            {`${moment
-              .unix(this.props.startTime)
-              .format('HH:mm')}-${moment
-              .unix(this.props.endTime)
-              .format('HH:mm')}`}
-          </Text>
+          <Text style={{ fontSize: 12 }}>{this.props.title}</Text>
         </View>
       </TouchableOpacity>
     );

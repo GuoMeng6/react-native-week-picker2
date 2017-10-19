@@ -137,7 +137,7 @@ class GridLayout extends Component {
   }
 
   render() {
-    console.log('========= [render] ======== ', this.state);
+    console.log('========= [render] ======== ', this.props.rentData);
     const { timeLength, dayLength } = this.props.data;
     return (
       <View style={styles.container}>
@@ -162,10 +162,32 @@ class GridLayout extends Component {
               height: this.state.height - 4,
             }}
             clearData={this.clearData}
+            title={`${moment
+              .unix(this.props.startTime)
+              .format('HH:mm')}-${moment
+              .unix(this.props.endTime)
+              .format('HH:mm')}`}
             startTime={this.state.startTime}
             endTime={this.state.endTime}
           />
         ) : null}
+        {this.props.rentData.map(data => {
+          console.log('data = ', data);
+          return (
+            <ClickViewItem
+              style={{
+                left: data.start.x * UI.size.rowWidth + 2,
+                top: data.start.y * UI.size.rowHeight + 2,
+                height: (data.end.y - data.start.y) * UI.size.rowHeight - 4,
+                backgroundColor: '#ffe66f',
+              }}
+              disabled
+              title="123123"
+              startTime={this.state.startTime}
+              endTime={this.state.endTime}
+            />
+          );
+        })}
       </View>
     );
   }

@@ -11,18 +11,16 @@ import ReactPicker from './js';
 
 moment.locale('zh-cn', zhLocal);
 
-const URL = 'https://ali.api.officewell.co/v1/';
 export default class App extends Component<{}> {
-  componentWillMount() {
-    const deviceId = '';
-    const startTime = '';
-    const endTime = '';
-    const url =
-      `${URL}/terminal/space-event-record/${deviceId}?startTime=${startTime}` &
-      `endTime=${endTime}`;
-  }
-
   render() {
-    return <ReactPicker />;
+    return (
+      <ReactPicker
+        timeStatus={{
+          startTime: 8,
+          endTime: 21,
+          weekMoment: moment().startOf('week'),
+        }}
+      />
+    );
   }
 }
