@@ -12,15 +12,7 @@ import UI from 'UI';
 import moment from 'moment';
 import ClickViewItem from './ClickViewItem';
 
-const defaultState = {
-  row: '',
-  vertical: '',
-  top: 0,
-  left: 0,
-  height: 0,
-  startTime: 0,
-  endTime: 0,
-};
+const defaultState = [];
 
 class GridLayout extends Component {
   constructor(props) {
@@ -35,7 +27,8 @@ class GridLayout extends Component {
     }
     console.log('data = ', data);
     this.state = {
-      ...defaultState,
+      defaultState,
+      type: 0,
       dataSource: ds.cloneWithRows(data),
     };
     console.log('============ this.state  = ', this.state);
@@ -48,6 +41,77 @@ class GridLayout extends Component {
     this.setState(defaultState);
   }
 
+  // onScroll2(y) {
+  //   this.listView.scrollTo({ x: 0, y, animated: true });
+  // }
+
+  filterData(x, y, rangeData) {
+    const rentData = this.props.rentData;
+    let flag = false; // 标记是否包含已选择的区块
+    const range = rangeData;
+    //* ******判断是否为第一次点击 */
+    console.log('-------range----', range);
+
+    if (!range) {
+      console.log('-----------');
+
+      return {
+        start: {
+          x,
+          y,
+        },
+        end: {
+          x: x + 1,
+          y: y + 1,
+        },
+      };
+    }
+    if (
+      range.start.x <= x <= range.end.x &&
+      range.start.y <= y <= range.end.y
+    ) {
+      console.log('-----false-----');
+
+      return false;
+    }
+
+    if (x > range.start.x && y > range.start.y) {
+      range.end.x = x + 1;
+      range.end.y = y + 1;
+    } else {
+      console.log('-------111------');
+
+      let tmp;
+      tmp = range.start.x;
+      range.start.x = x;
+      range.end.x = tmp + 1;
+      tmp = range.start.y;
+      range.start.y = y;
+      range.end.y = tmp + 1;
+    }
+    console.log('-----222range2-----', range);
+
+    for (let i = 0; i < rentData.length; i++) {
+      if (range.start.x < x < range.end.x && range.start.y < y < range.end.y) {
+        flag = true;
+        break;
+      }
+    }
+
+    if (flag) {
+      return {
+        start: {
+          x,
+          y,
+        },
+        end: {
+          x,
+          y,
+        },
+      };
+    }
+    return range;
+  }
   _renderRow(rowData = {}, sectionID, rowID) {
     return (
       <TouchableOpacity
@@ -55,61 +119,67 @@ class GridLayout extends Component {
         onPress={() => {
           const index = parseInt(rowID);
           const { dayLength } = this.props.data;
-          const row = parseInt(index / dayLength);
-          const vertical = index % dayLength;
+          const y = parseInt(index / dayLength);
+          const x = index % dayLength;
           console.log('============= 坐标 = ', {
-            row,
-            vertical,
+            y,
+            x,
           });
-          const currentDay9amUnix = moment
-            .unix(this.props.weekMoment.unix())
-            .add(vertical, 'day')
-            .add(this.props.timeStatus.startTime, 'hour')
-            .unix();
-          if (
-            this.state.vertical !== vertical ||
-            this.state.height > UI.size.rowHeight
-          ) {
-            this.setState({
-              row,
-              vertical,
-              top: row * UI.size.rowHeight,
-              left:
-                vertical *
-                (UI.size.deviceWidth - UI.size.number120) /
-                dayLength,
-              height: UI.size.rowHeight,
-              startTime: currentDay9amUnix + row * 1800,
-              endTime: currentDay9amUnix + (row + 1) * 1800,
-            });
-            this.props.onSelectedChanged({ selected: true });
-            return;
-          }
-          // 在同一轴上
-          // if (this.state.height > UI.size.rowHeight) {
-          //   // 取消当前选中项
-          //   this.setState(defaultState);
+
+          // const currentDay9amUnix = moment
+          //   .unix(this.props.weekMoment.unix())
+          //   .add(vertical, 'day')
+          //   .add(this.props.timeStatus.startTime, 'hour')
+          //   .unix();
+
+          const range = this.state.defaultState[0];
+          const result = this.filterData(x, y, range);
+          console.log('=========result=====', result);
+
+          // if (
+          //   this.state.vertical !== vertical ||
+          //   this.state.height > UI.size.rowHeight
+          // ) {
+          //   this.setState({
+          //     row,
+          //     vertical,
+          //     top: row * UI.size.rowHeight,
+          //     left:
+          //       vertical *
+          //       (UI.size.deviceWidth - UI.size.number120) /
+          //       dayLength,
+          //     height: UI.size.rowHeight,
+          //     startTime: currentDay9amUnix + row * 1800,
+          //     endTime: currentDay9amUnix + (row + 1) * 1800,
+          //   });
+
           //   return;
           // }
+          // // 在同一轴上
+          // // if (this.state.height > UI.size.rowHeight) {
+          // //   // 取消当前选中项
+          // //   this.setState(defaultState);
+          // //   return;
+          // // }
 
-          const rowMin = Math.min(this.state.row, row);
-          const halfHourCount = Math.abs(this.state.row - row) + 1;
-          console.log('========== 同一轴上 ======= ', {
-            rowMin,
-            halfHourCount,
-            startTime: currentDay9amUnix + rowMin * 1800,
-            endTime: currentDay9amUnix + rowMin * 1800 + halfHourCount * 1800,
-          });
-          this.setState({
-            row: rowMin,
-            vertical,
-            top: rowMin * UI.size.rowHeight,
-            left:
-              vertical * (UI.size.deviceWidth - UI.size.number120) / dayLength,
-            height: UI.size.rowHeight * halfHourCount,
-            startTime: currentDay9amUnix + rowMin * 1800,
-            endTime: currentDay9amUnix + rowMin * 1800 + halfHourCount * 1800,
-          });
+          // const rowMin = Math.min(this.state.row, row);
+          // const halfHourCount = Math.abs(this.state.row - row) + 1;
+          // console.log('========== 同一轴上 ======= ', {
+          //   rowMin,
+          //   halfHourCount,
+          //   startTime: currentDay9amUnix + rowMin * 1800,
+          //   endTime: currentDay9amUnix + rowMin * 1800 + halfHourCount * 1800,
+          // });
+          // this.setState({
+          //   row: rowMin,
+          //   vertical,
+          //   top: rowMin * UI.size.rowHeight,
+          //   left:
+          //     vertical * (UI.size.deviceWidth - UI.size.number120) / dayLength,
+          //   height: UI.size.rowHeight * halfHourCount,
+          //   startTime: currentDay9amUnix + rowMin * 1800,
+          //   endTime: currentDay9amUnix + rowMin * 1800 + halfHourCount * 1800,
+          // });
         }}
       >
         <View
