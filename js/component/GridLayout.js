@@ -45,9 +45,9 @@ class GridLayout extends Component {
   //   this.listView.scrollTo({ x: 0, y, animated: true });
   // }
 
-  filterData(x, y, rangeData) {
+  filterClickData(x, y, rangeData) {
     const rentData = this.props.rentData;
-    let flag = false; // 标记是否包含已选择的区块
+    const flag = false; // 标记是否包含已选择的区块
     const range = rangeData;
     //* ******判断是否为第一次点击 */
     console.log('-------range----', range);
@@ -67,51 +67,70 @@ class GridLayout extends Component {
       };
     }
     if (
-      range.start.x <= x <= range.end.x &&
-      range.start.y <= y <= range.end.y
+      x < range.end.x &&
+      x >= range.start.x &&
+      y < range.end.y &&
+      y >= range.start.y
     ) {
-      console.log('-----false-----');
+      console.log('-----false-----', { x, y });
 
       return false;
     }
 
-    if (x > range.start.x && y > range.start.y) {
-      range.end.x = x + 1;
-      range.end.y = y + 1;
-    } else {
-      console.log('-------111------');
-
-      let tmp;
-      tmp = range.start.x;
+    if (x < range.start.x) {
       range.start.x = x;
-      range.end.x = tmp + 1;
-      tmp = range.start.y;
-      range.start.y = y;
-      range.end.y = tmp + 1;
+    } else {
+      range.end.x = x + 1;
     }
+
+    if (y < range.start.y) {
+      range.start.y = y;
+    } else {
+      range.end.y = y + 1;
+    }
+
     console.log('-----222range2-----', range);
 
-    for (let i = 0; i < rentData.length; i++) {
-      if (range.start.x < x < range.end.x && range.start.y < y < range.end.y) {
-        flag = true;
-        break;
-      }
-    }
+    // for (let i = 0; i < rentData.length; i++) {
+    //   if (range.start.x < x < range.end.x && range.start.y < y < range.end.y) {
+    //     flag = true;
+    //     break;
+    //   }
+    // }
 
-    if (flag) {
-      return {
-        start: {
-          x,
-          y,
-        },
-        end: {
-          x: x + 1,
-          y: y + 1,
-        },
-      };
-    }
+    // if (flag) {
+    //   return {
+    //     start: {
+    //       x,
+    //       y,
+    //     },
+    //     end: {
+    //       x: x + 1,
+    //       y: y + 1,
+    //     },
+    //   };
+    // }
     return range;
   }
+  // filterData(range, ranges) {
+  //   const startX = range.start.x;
+  //   const startY = range.start.y;
+
+  //   const endX = range.end.x;
+  //   const endY = range.end.y;
+  //   for (let i = 0; i < ranges.length; i++) {
+
+  //     if (
+  //       startX <= ranges[i].end.x &&
+  //       startX >= ranges[i].start.x &&
+  //       e <= ranges[i].end.x &&
+  //       e >= ranges[i].start.x &&
+  //     ) {
+  //       return false;
+  //     }
+  //   }
+  //   return true;
+  // }
   _renderRow(rowData = {}, sectionID, rowID) {
     return (
       <TouchableOpacity
@@ -133,8 +152,11 @@ class GridLayout extends Component {
           //   .unix();
 
           const range = this.state.defaultState[0];
-          const result = this.filterData(x, y, range);
+          const result = this.filterClickData(x, y, range);
           console.log('=========result=====', result);
+          this.setState({
+            defaultState: [result],
+          });
 
           // if (
           //   this.state.vertical !== vertical ||
