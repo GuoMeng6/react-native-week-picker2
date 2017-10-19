@@ -66,16 +66,6 @@ class GridLayout extends Component {
         },
       };
     }
-    if (
-      x < range.end.x &&
-      x >= range.start.x &&
-      y < range.end.y &&
-      y >= range.start.y
-    ) {
-      console.log('-----false-----', { x, y });
-
-      return false;
-    }
 
     if (x < range.start.x) {
       range.start.x = x;
@@ -91,25 +81,6 @@ class GridLayout extends Component {
 
     console.log('-----222range2-----', range);
 
-    // for (let i = 0; i < rentData.length; i++) {
-    //   if (range.start.x < x < range.end.x && range.start.y < y < range.end.y) {
-    //     flag = true;
-    //     break;
-    //   }
-    // }
-
-    // if (flag) {
-    //   return {
-    //     start: {
-    //       x,
-    //       y,
-    //     },
-    //     end: {
-    //       x: x + 1,
-    //       y: y + 1,
-    //     },
-    //   };
-    // }
     return range;
   }
   filterData(aRange, bRanges) {
@@ -126,15 +97,12 @@ class GridLayout extends Component {
       const bEndY = bRanges[i].end.x;
 
       if (
-        aStartX >= bStartX &&
-        aStartX <= bEndX &&
-        (aStartY >= bStartY && aStartY <= bEndY) &&
-        (aEndX >= bStartX &&
-          aEndX <= bEndX &&
-          (aEndY >= bStartY && aEndY <= bEndY)) &&
-        (aStartX <= bStartX &&
-          aStartY <= bStartY &&
-          (aEndX >= bEndX && aEndY >= bEndY))
+        !(
+          aEndX <= bStartX ||
+          aStartX >= bEndX ||
+          aEndY <= bStartY ||
+          aStartY >= bEndY
+        )
       ) {
         return false;
       }
@@ -155,63 +123,36 @@ class GridLayout extends Component {
             x,
           });
 
-          // const currentDay9amUnix = moment
-          //   .unix(this.props.weekMoment.unix())
-          //   .add(vertical, 'day')
-          //   .add(this.props.timeStatus.startTime, 'hour')
-          //   .unix();
-
           const range = this.state.defaultState[0];
           const result = this.filterClickData(x, y, range);
+          const mergeProps = this.filterData(result, this.props.rentData);
+          if (!mergeProps) {
+            return {
+              start: {
+                x,
+                y,
+              },
+              end: {
+                x: x + 1,
+                y: y + 1,
+              },
+            };
+          }
+          const mergeState = this.filterData(result, this.state.defaultState);
+
+          if (!mergeState) {
+            return {
+              start: {
+                x,
+                y,
+              },
+              end: {
+                x: x + 1,
+                y: y + 1,
+              },
+            };
+          }
           console.log('=========result=====', result);
-          this.setState({
-            defaultState: [result],
-          });
-
-          // if (
-          //   this.state.vertical !== vertical ||
-          //   this.state.height > UI.size.rowHeight
-          // ) {
-          //   this.setState({
-          //     row,
-          //     vertical,
-          //     top: row * UI.size.rowHeight,
-          //     left:
-          //       vertical *
-          //       (UI.size.deviceWidth - UI.size.number120) /
-          //       dayLength,
-          //     height: UI.size.rowHeight,
-          //     startTime: currentDay9amUnix + row * 1800,
-          //     endTime: currentDay9amUnix + (row + 1) * 1800,
-          //   });
-
-          //   return;
-          // }
-          // // 在同一轴上
-          // // if (this.state.height > UI.size.rowHeight) {
-          // //   // 取消当前选中项
-          // //   this.setState(defaultState);
-          // //   return;
-          // // }
-
-          // const rowMin = Math.min(this.state.row, row);
-          // const halfHourCount = Math.abs(this.state.row - row) + 1;
-          // console.log('========== 同一轴上 ======= ', {
-          //   rowMin,
-          //   halfHourCount,
-          //   startTime: currentDay9amUnix + rowMin * 1800,
-          //   endTime: currentDay9amUnix + rowMin * 1800 + halfHourCount * 1800,
-          // });
-          // this.setState({
-          //   row: rowMin,
-          //   vertical,
-          //   top: rowMin * UI.size.rowHeight,
-          //   left:
-          //     vertical * (UI.size.deviceWidth - UI.size.number120) / dayLength,
-          //   height: UI.size.rowHeight * halfHourCount,
-          //   startTime: currentDay9amUnix + rowMin * 1800,
-          //   endTime: currentDay9amUnix + rowMin * 1800 + halfHourCount * 1800,
-          // });
         }}
       >
         <View
