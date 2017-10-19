@@ -182,9 +182,8 @@ class GridLayout extends Component {
                 backgroundColor: '#ffe66f',
               }}
               disabled
-              title="123123"
-              startTime={this.state.startTime}
-              endTime={this.state.endTime}
+              title={data.title}
+              subTitle={data.subTitle}
             />
           );
         })}

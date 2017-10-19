@@ -14,7 +14,8 @@ class ClickViewItem extends Component {
         disabled={this.props.disabled}
       >
         <View style={{ flex: 1 }}>
-          <Text style={{ fontSize: 12 }}>{this.props.title}</Text>
+          <Text style={{ fontSize: 14 }}>{this.props.title}</Text>
+          <Text style={{ fontSize: 12 }}>{this.props.subTitle}</Text>
         </View>
       </TouchableOpacity>
     );
