@@ -112,25 +112,35 @@ class GridLayout extends Component {
     // }
     return range;
   }
-  // filterData(range, ranges) {
-  //   const startX = range.start.x;
-  //   const startY = range.start.y;
+  filterData(aRange, bRanges) {
+    const aStartX = aRange.start.x;
+    const aStartY = aRange.start.y;
 
-  //   const endX = range.end.x;
-  //   const endY = range.end.y;
-  //   for (let i = 0; i < ranges.length; i++) {
+    const aEndX = aRange.end.x;
+    const aEndY = aRange.end.y;
+    for (let i = 0; i < bRanges.length; i++) {
+      const bStartX = bRanges[i].start.x;
+      const bStartY = bRanges[i].start.y;
 
-  //     if (
-  //       startX <= ranges[i].end.x &&
-  //       startX >= ranges[i].start.x &&
-  //       e <= ranges[i].end.x &&
-  //       e >= ranges[i].start.x &&
-  //     ) {
-  //       return false;
-  //     }
-  //   }
-  //   return true;
-  // }
+      const bEndX = bRanges[i].end.x;
+      const bEndY = bRanges[i].end.x;
+
+      if (
+        aStartX >= bStartX &&
+        aStartX <= bEndX &&
+        (aStartY >= bStartY && aStartY <= bEndY) &&
+        (aEndX >= bStartX &&
+          aEndX <= bEndX &&
+          (aEndY >= bStartY && aEndY <= bEndY)) &&
+        (aStartX <= bStartX &&
+          aStartY <= bStartY &&
+          (aEndX >= bEndX && aEndY >= bEndY))
+      ) {
+        return false;
+      }
+    }
+    return true;
+  }
   _renderRow(rowData = {}, sectionID, rowID) {
     return (
       <TouchableOpacity
