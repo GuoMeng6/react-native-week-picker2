@@ -41,8 +41,7 @@ class GridLayout extends Component {
   //   this.listView.scrollTo({ x: 0, y, animated: true });
   // }
 
-  filterClickData(x, y, rangeData) {
-    const rentData = this.props.rentData;
+  filterClickData(x, y, rangeData, type) {
     const flag = false; // 标记是否包含已选择的区块
     const range = rangeData;
     //* ******判断是否为第一次点击 */
@@ -59,16 +58,31 @@ class GridLayout extends Component {
       };
     }
 
-    if (x < range.start.x) {
-      range.start.x = x;
-    } else {
-      range.end.x = x + 1;
+    if (type === 'ROW') {
+      if (y !== range.start.y) {
+      }
     }
 
-    if (y < range.start.y) {
-      range.start.y = y;
-    } else {
-      range.end.y = y + 1;
+    if (type === 'COLUMN') {
+      if (x !== range.start.x) {
+      }
+    }
+
+    if (type === 'ALL') {
+      if (x < range.start.x) {
+        range.start.x = x;
+      } else {
+        range.end.x = x + 1;
+      }
+
+      if (y < range.start.y) {
+        range.start.y = y;
+      } else {
+        range.end.y = y + 1;
+      }
+    }
+
+    if (type === 'CALENDAR') {
     }
 
     return range;
@@ -101,6 +115,8 @@ class GridLayout extends Component {
     }
     return true;
   }
+
+  getData() {}
 
   _renderRow(rowData = {}, sectionID, rowID) {
     return (
