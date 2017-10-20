@@ -100,7 +100,7 @@ class GridLayout extends Component {
       const bStartY = bRanges[i].start.y;
 
       const bEndX = bRanges[i].end.x;
-      const bEndY = bRanges[i].end.x;
+      const bEndY = bRanges[i].end.y;
 
       if (
         !(
@@ -184,6 +184,21 @@ class GridLayout extends Component {
           initialListSize={timeLength * dayLength * 2}
           renderRow={this._renderRow}
         />
+
+        {this.props.rentData.map((data, index) => (
+          <ClickViewItem
+            key={`clickItem${index}`}
+            style={{
+              left: data.start.x * UI.size.rowWidth + 2,
+              top: data.start.y * UI.size.rowHeight + 2,
+              height: (data.end.y - data.start.y) * UI.size.rowHeight - 4,
+              backgroundColor: '#ffe66f',
+            }}
+            disabled
+            title={data.title}
+            subTitle={data.subTitle}
+          />
+        ))}
         {this.state.defaultState.map((data, index) => (
           <ClickViewItem
             key={`click2Item${index}`}
@@ -197,20 +212,6 @@ class GridLayout extends Component {
             clearData={this.clearData}
             title={this.state.selectedItem.title}
             subTitle={this.state.selectedItem.subTitle}
-          />
-        ))}
-        {this.props.rentData.map((data, index) => (
-          <ClickViewItem
-            key={`clickItem${index}`}
-            style={{
-              left: data.start.x * UI.size.rowWidth + 2,
-              top: data.start.y * UI.size.rowHeight + 2,
-              height: (data.end.y - data.start.y) * UI.size.rowHeight - 4,
-              backgroundColor: '#ffe66f',
-            }}
-            disabled
-            title={data.title}
-            subTitle={data.subTitle}
           />
         ))}
       </View>
