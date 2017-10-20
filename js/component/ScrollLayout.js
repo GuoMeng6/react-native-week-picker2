@@ -41,6 +41,7 @@ class ScrollLayout extends Component {
             weekMoment={this.props.timeStatus.weekMoment}
             rentData={this.props.rentData}
             onSelectedChanged={this.props.onSelectedChanged}
+            type="COLUMN"
           />
         </View>
       </ScrollView>

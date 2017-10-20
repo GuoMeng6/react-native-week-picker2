@@ -26,6 +26,7 @@ class ReactPicker extends Component {
   }
 
   onSelectedChanged(data) {
+    console.log('====== onSelectedChanged data = ', data);
     const todayStartUnix = moment()
       .startOf('week')
       .add(data.start.x + 1, 'day')

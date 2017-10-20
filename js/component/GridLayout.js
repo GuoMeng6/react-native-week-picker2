@@ -37,55 +37,49 @@ class GridLayout extends Component {
     this.setState({ defaultState: [] });
   }
 
-  // onScroll2(y) {
-  //   this.listView.scrollTo({ x: 0, y, animated: true });
-  // }
-
   filterClickData(x, y, rangeData, type) {
+    // return Array
     const flag = false; // 标记是否包含已选择的区块
     const range = rangeData;
     //* ******判断是否为第一次点击 */
-    if (!range) {
-      return {
-        start: {
-          x,
-          y,
-        },
-        end: {
-          x: x + 1,
-          y: y + 1,
-        },
-      };
+
+    if (
+      (type === 'ROW' && y !== range.start.y) ||
+      (type === 'COLUMN' && x !== range.start.x)
+    ) {
+      return [this.getCurrentClickItem(x, y)];
     }
 
-    if (type === 'ROW') {
-      if (y !== range.start.y) {
-      }
+    // if (type === 'ROW') {
+    //   if (y !== range.start.y) {
+    //     return [this.getCurrentClickItem(x, y)];
+    //   }
+    // }
+    //
+    // if (type === 'COLUMN') {
+    //   if (x !== range.start.x) {
+    //     return [this.getCurrentClickItem(x, y)];
+    //   }
+    // }
+
+    // if (type === 'ALL') {
+    if (x < range.start.x) {
+      range.start.x = x;
+    } else {
+      range.end.x = x + 1;
     }
 
-    if (type === 'COLUMN') {
-      if (x !== range.start.x) {
-      }
+    if (y < range.start.y) {
+      range.start.y = y;
+    } else {
+      range.end.y = y + 1;
     }
-
-    if (type === 'ALL') {
-      if (x < range.start.x) {
-        range.start.x = x;
-      } else {
-        range.end.x = x + 1;
-      }
-
-      if (y < range.start.y) {
-        range.start.y = y;
-      } else {
-        range.end.y = y + 1;
-      }
-    }
+    // }
 
     if (type === 'CALENDAR') {
     }
 
-    return range;
+    return [range];
   }
 
   filterData(aRange, bRanges) {
@@ -116,39 +110,57 @@ class GridLayout extends Component {
     return true;
   }
 
-  getData() {}
+  getCurrentClickItem(x, y) {
+    return {
+      start: {
+        x,
+        y,
+      },
+      end: {
+        x: x + 1,
+        y: y + 1,
+      },
+    };
+  }
+
+  onSelectedChanged(result) {
+    console.log('========== [GridLayout] ========== ', result);
+    const returnData = this.props.onSelectedChanged(result[0]);
+    this.setState({
+      defaultState: result,
+      selectedItem: returnData,
+    });
+  }
+
+  onPress(rowID) {
+    const index = parseInt(rowID);
+    const { dayLength } = this.props.data;
+    const y = parseInt(index / dayLength);
+    const x = index % dayLength;
+    let result;
+    const range = this.state.defaultState[0];
+    if (!range) {
+      result = [this.getCurrentClickItem(x, y)];
+    } else {
+      result = this.filterClickData(x, y, range, this.props.type);
+    }
+    console.log('========= result = ', result);
+    const mergeProps = this.filterData(result[0], this.props.rentData);
+    if (!mergeProps) {
+      this.onSelectedChanged([this.getCurrentClickItem(x, y)]);
+      return;
+    }
+    const mergeState = this.filterData(result[0], this.state.defaultState);
+    if (!mergeState) {
+    }
+    this.onSelectedChanged(result);
+  }
 
   _renderRow(rowData = {}, sectionID, rowID) {
     return (
       <TouchableOpacity
         activeOpacity={1}
-        onPress={() => {
-          const index = parseInt(rowID);
-          const { dayLength } = this.props.data;
-          const y = parseInt(index / dayLength);
-          const x = index % dayLength;
-          console.log('============= 坐标 = ', {
-            y,
-            x,
-          });
-
-          const range = this.state.defaultState[0];
-          const result = this.filterClickData(x, y, range);
-
-          const mergeProps = this.filterData(result, this.props.rentData);
-          if (!mergeProps) {
-            console.log('========= mergeProps ===========');
-          }
-          const mergeState = this.filterData(result, this.state.defaultState);
-          if (!mergeState) {
-            // console.log('========= mergeState ===========');
-          }
-          const returnData = this.props.onSelectedChanged(result);
-          this.setState({
-            defaultState: [result],
-            selectedItem: returnData,
-          });
-        }}
+        onPress={this.onPress.bind(this, rowID)}
       >
         <View
           style={{
