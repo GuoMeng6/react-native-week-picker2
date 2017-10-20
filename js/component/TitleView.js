@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, ScrollView } from 'react-native';
 
 import UI from 'UI';
 import moment from 'moment';
-import esLocal from 'moment/locale/es-us';
+import enLocal from 'moment/locale/en-au';
 
 const time = [];
 
@@ -18,7 +18,7 @@ class TitleView extends Component {
       time.push(
         moment
           .unix(props.timeStatus.weekMoment)
-          .locale('en-us', esLocal)
+          .locale('en', enLocal)
           .add(i, 'hour')
           .format('hA'),
       );
