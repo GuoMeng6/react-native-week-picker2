@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import { View, StyleSheet, ScrollView } from 'react-native';
 
+import GridPicker from 'react-native-grid-picker';
+
 import UI from 'UI';
 import TitleView from './TitleView';
-import GridLayout from './GridLayout';
 
 class ScrollLayout extends Component {
   render() {
@@ -29,18 +30,18 @@ class ScrollLayout extends Component {
               1
             }
           />
-          <GridLayout
-            data={{
-              timeLength:
-                this.props.timeStatus.endTime -
-                this.props.timeStatus.startTime +
-                1,
-              dayLength: 7,
+          <GridPicker
+            coordinate={{
+              row:
+                (this.props.timeStatus.endTime -
+                  this.props.timeStatus.startTime +
+                  1) *
+                2,
+              column: 7,
             }}
-            timeStatus={this.props.timeStatus}
-            weekMoment={this.props.timeStatus.weekMoment}
-            rentData={this.props.rentData}
+            displayData={this.props.displayData}
             onSelectedChanged={this.props.onSelectedChanged}
+            itemStyle={{ width: 120, height: 60 }}
             type="COLUMN"
           />
         </View>

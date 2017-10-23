@@ -17,7 +17,7 @@ export default class App extends Component<{}> {
       <ReactPicker
         timeStatus={{
           startTime: 8,
-          endTime: 21,
+          endTime: 19,
           weekMoment: moment().startOf('week'),
         }}
       />

@@ -4,8 +4,6 @@ import { View, StyleSheet } from 'react-native';
 import moment from 'moment';
 import zhLocal from 'moment/locale/zh-cn';
 
-import GridLayout from './component/GridLayout.js';
-import TitleView from './component/TitleView';
 import HeadView from './component/HeadView';
 import ScrollLayout from './component/ScrollLayout';
 
@@ -20,7 +18,7 @@ class ReactPicker extends Component {
     super(props);
     this.onScroll = this.onScroll.bind(this);
     this.state = {
-      rentData: [],
+      displayData: [],
     };
     this.onSelectedChanged = this.onSelectedChanged.bind(this);
   }
@@ -89,7 +87,7 @@ class ReactPicker extends Component {
             };
           });
           this.setState({
-            rentData: filterData,
+            displayData: filterData,
           });
         }
       });
@@ -105,7 +103,7 @@ class ReactPicker extends Component {
       <View style={styles.container}>
         <ScrollLayout
           timeStatus={{ ...defaultData, ...propsStatus }}
-          rentData={this.state.rentData}
+          displayData={this.state.displayData}
           onSelectedChanged={this.onSelectedChanged}
         />
         <HeadView
